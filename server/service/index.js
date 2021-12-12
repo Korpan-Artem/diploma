@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 function jwtCheck(req, secret) {
     const authorization = req && req.headers && req.headers.authorization;
   

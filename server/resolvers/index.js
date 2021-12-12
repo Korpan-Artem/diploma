@@ -1,4 +1,6 @@
 const {User,Device,Order,OrderDevice,Image} = require("../models");
+const jwt = require("jsonwebtoken");
+const SECRET = "big big SeCret";
 
 const resolvers = {
     async getAllDevice() {
@@ -53,10 +55,19 @@ const resolvers = {
     },
   
     async newOrder({order}, {thisUser}) {
+        if(!thisUser) return null;
         const dbOrder = await thisUser.createOrder();  
         await Promise.all(order.orderDevices.map(od => dbOrder.createOrderDevice(od)));
         return dbOrder;
-    }
+    },
+     
+    async getAllOrderAdmin () {
+      return await OrderDevice.findAll();
+    }, 
+
+    async getOrder () {
+      return await Order.findAll({group: ['order']});
+    }, 
     
   };
 

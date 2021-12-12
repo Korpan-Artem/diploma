@@ -36,8 +36,8 @@ Device.init(
 );
 
 class Order extends Sequelize.Model {
-    get device() {
-        return this.getDevice();
+    get user() {
+      return this.getUser();
     }
 }
 
@@ -51,6 +51,10 @@ Order.init(
 class OrderDevice extends Sequelize.Model {
   get order() {
     return this.getOrder();
+  }
+
+  get device() {
+    return this.getDevice();
   }
 }
 
@@ -85,5 +89,7 @@ OrderDevice.belongsTo(Order);
 
 Image.hasMany(Device);
 Device.belongsTo(Image);
+
+sequelize.sync();
 
 module.exports = {User,Device,Order,OrderDevice,Image}

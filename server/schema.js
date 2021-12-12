@@ -6,6 +6,8 @@ type Query {
     getAllDeviceAdmin: [Device],
     getDevice(id: ID): Device,
     login(email: String!,password: String!): String,
+    getAllOrderAdmin: [OrderDevice]
+    getOrder: [Order]
 }
 
 type Mutation {
@@ -37,12 +39,15 @@ type User {
 
 type Order {
     id: ID,
+    user: User
 }
 
 type OrderDevice{
     id: ID,
     count:Int,
-    price: Int
+    price: Int,
+    device: Device
+    order: Order
 }
 
 type Image {
