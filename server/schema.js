@@ -40,6 +40,8 @@ type User {
 type Order {
     id: ID,
     user: User
+    createdAt: String,
+    updatedAt: String,
 }
 
 type OrderDevice{

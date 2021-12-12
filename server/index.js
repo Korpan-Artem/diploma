@@ -1,30 +1,23 @@
 
 const Sequelize = require("sequelize");
 const cors = require("cors");
+const { graphqlHTTP: express_graphql } = require("express-graphql");
+const jwtCheck = require("./service");
+const {User} = require("./models");
+const resolvers = require("./resolvers");
+const schema = require("./schema");
+const SECRET = "big big SeCret";
+const app = require("express")();
+const express = require("express");
+const router = require('./routes');
 const sequelize = new Sequelize("project", "postgres", "1300", {
   dialect: "postgres",
   host: "localhost",
   port: 5001,
 });
-const { graphqlHTTP: express_graphql } = require("express-graphql");
-const jwtCheck = require("./service");
-const {User,Image} = require("./models");
-const resolvers = require("./resolvers");
-const schema = require("./schema");
-
-const jwt = require("jsonwebtoken");
-const SECRET = "big big SeCret";
-
-const fs = require("fs");
-const multer = require("multer");
-const upload = multer({ dest: "public/uploads" });
-
-const app = require("express")();
-const express = require("express");
 
 app.use(cors());
 app.use(express.static("public"));
-
 
 
 (async () => {
@@ -32,32 +25,7 @@ app.use(express.static("public"));
 })();
 
   
-app.get("/download/:id", async (req, res, next) => {
-  const path = req.params.id;
-  const file = fs.createReadStream(`public/uploads/${path}`);
-  const filename = new Date().toISOString();
-  res.setHeader(
-    "Content-Disposition",
-    'attachment: filename="' + filename + '"'
-  );
-  file.pipe(res);
-});
-
-app.post("/uploads", upload.single("image"), async function (req, res, next) {
-  let filedata = req.file;
-  const jwt = jwtCheck(req, SECRET);
-  if (!filedata) res.send(JSON.stringify("Error"));
-  if (jwt) {
-    let url = filedata.path.replace(/public\//, "");
-    let originalFileName = filedata.filename;
-    let image = Image.create({
-      url,
-      originalFileName,
-    });
-    const { dataValues } = await image;
-    res.json(dataValues);
-  }
-});
+app.use(router);
 
 app.use(
   "/graphql",

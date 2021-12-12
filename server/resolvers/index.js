@@ -13,7 +13,6 @@ const resolvers = {
     async login({ email, password }) {
       if (!email || !password) return null;
       const user = await User.findOne({ where: { email, password } });
-      console.log(user);
       if (!user) return null;
       const token = jwt.sign(
         {
