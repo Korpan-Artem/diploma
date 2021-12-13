@@ -5,7 +5,11 @@ const sequelize = new Sequelize("project", "postgres", "1300", {
     port: 5001,
   });
 
-class User extends Sequelize.Model {}
+class User extends Sequelize.Model {
+  get device() {
+    return this.getDevice();
+  }
+}
 
 User.init(
   {
@@ -16,11 +20,14 @@ User.init(
   },
   { sequelize, modelName: "user" }
 );
-
+  
 class Device extends Sequelize.Model {
   get image() {
-    return this.getImage();
+    return this.getImages();
   }
+  get user() {
+    return this.getUser();
+  } 
 }
 
 Device.init(
@@ -67,7 +74,16 @@ OrderDevice.init(
   { sequelize, modelName: "orderDevice" }
 );
 
-class Image extends Sequelize.Model {}
+class Image extends Sequelize.Model {
+  get device() {
+    return this.getDevice();
+  }
+
+  get user() {
+    return this.getUser();
+  }
+  
+}
 
 Image.init(
   {
@@ -81,15 +97,23 @@ Image.init(
 User.hasOne(Order);
 Order.belongsTo(User);
 
+User.hasMany(Device);
+Device.belongsTo(User);
+
+User.hasMany(Image);
+Image.belongsTo(User);
+
 Device.hasMany(OrderDevice);
 OrderDevice.belongsTo(Device);
 
 Order.hasMany(OrderDevice);
 OrderDevice.belongsTo(Order);
 
-Image.hasMany(Device);
-Device.belongsTo(Image);
+Device.hasMany(Image);
+Image.belongsTo(Device);
 
+
+//sequelize.sync({force: true});
 sequelize.sync();
 
 module.exports = {User,Device,Order,OrderDevice,Image}

@@ -8,6 +8,7 @@ type Query {
     login(email: String!,password: String!): String,
     getAllOrderAdmin: [OrderDevice]
     getOrder: [Order]
+    getImage: [Image]
 }
 
 type Mutation {
@@ -55,6 +56,7 @@ type OrderDevice{
 type Image {
     id: ID, 
     url: String,
+    device: Device,
     originalFileName: String,
     createdAt: String,
 }
@@ -65,8 +67,9 @@ type Device {
     price: Int,
     description: String,    
     isDeleted: Boolean,
-    image: Image,
+    image: [Image],
     qty: Int,
+    user: User
 }
 `);
 

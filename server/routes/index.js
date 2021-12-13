@@ -7,17 +7,6 @@ const multer = require("multer");
 const upload = multer({ dest: "public/uploads" });
 const SECRET = "big big SeCret";
 const jwtCheck = require("../service");
-
-router.get("/download/:id", async (req, res, next) => {
-    const path = req.params.id;
-    const file = fs.createReadStream(`public/uploads/${path}`);
-    const filename = new Date().toISOString();
-    res.setHeader(
-      "Content-Disposition",
-      'attachment: filename="' + filename + '"'
-    );
-    file.pipe(res);
-  });
   
   router.post("/uploads", upload.single("image"), async function (req, res, next) {
     let filedata = req.file;
